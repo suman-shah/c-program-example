@@ -1,24 +1,32 @@
-#include <stdio.h>
-int main() {
+// To find the largest element and the smallest element in the array
+#include<stdio.h>
+int main()
+{
   int n;
-  double arr[100];
-  printf("Enter the number of elements (1 to 100): ");
-  scanf("%d", &n);
-
-  for (int i = 0; i < n; ++i) {
-    printf("Enter number%d: ", i + 1);
-    scanf("%lf", &arr[i]);
+  printf("Enter the number of elements you want to enter in this array\n");
+  scanf("%d",&n);
+  int arr[n],i;
+  printf("Enter the %d elements in the array\n",n);
+  for(i=0;i<=n-1;i++)
+  {
+    scanf("%d",&arr[i]);
   }
-
-  // storing the largest number to arr[0]
-  for (int i = 1; i < n; ++i) {
-    if (arr[0] < arr[i]) {
-      arr[0] = arr[i];
+  int max= arr[n-1];
+  int min=arr[0];
+  for(i=1;i<=n-1;i++)
+  {
+    if(min>arr[i])
+    {
+      min=arr[i];
     }
   }
-
-  printf("Largest element = %.2lf", arr[0]);
-
+  for(i=0;i<=n-2;i++)
+  {
+    if(max<arr[i])
+    {
+      max=arr[i];
+    }
+  }
+  printf("The largest and the smallest element in the array is %d and %d respectively",max,min);
   return 0;
 }
-
