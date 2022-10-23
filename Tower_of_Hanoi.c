@@ -37,3 +37,43 @@
 // and destination Tower.
 
 // Try constructing the recursive tree diagram for even better understanding on the recursive calls that are helps us solve this puzzle.
+
+#include <stdio.h>
+
+// Towers of Hanoi logic
+void TOH(int n_disks, char Tower_A, char Tower_B, char Tower_C)
+{
+    if (n_disks > 0)
+    {
+        // first we make all n-1 disk are moved to Tower B using Tower C.
+        TOH(n_disks - 1, Tower_A, Tower_C, Tower_B);
+
+        // Then we move the Largest/Last Disk from Tower A to Tower C.
+        printf("Move Disk %d: from Tower %c -> Tower %c\n", n_disks, Tower_A, Tower_C);
+
+        // Finally we move all n-1 disk to Tower B using Tower C using Tower A.
+        TOH(n_disks - 1, Tower_B, Tower_A, Tower_C);
+    }
+
+    return;
+}
+
+// Driver Program
+int main(void)
+{
+    int no_of_disks = 3;
+    char Tower_A = 'A', Tower_B = 'B', Tower_C = 'C';
+    TOH(no_of_disks, Tower_A, Tower_B, Tower_C);
+    return 0;
+}
+
+// Output:
+// -------
+
+// Move Disk 1: from Tower A -> Tower C
+// Move Disk 2: from Tower A -> Tower B
+// Move Disk 1: from Tower C -> Tower B
+// Move Disk 3: from Tower A -> Tower C
+// Move Disk 1: from Tower B -> Tower A
+// Move Disk 2: from Tower B -> Tower C
+// Move Disk 1: from Tower A -> Tower C
