@@ -1,0 +1,210 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+
+
+/* ---------- DEQUE IMPLEMENTATION STARTS ---------- */
+
+typedef struct info
+{
+    int val;
+} info;
+
+typedef struct node queuenode;
+struct node
+{
+    info data;
+    struct node *prev;
+    struct node *next;
+};
+
+typedef struct Queue
+{
+    int size;
+    queuenode *front;
+    queuenode *back;
+} Queue;
+
+queuenode *InitializeNode(info d)
+{
+    queuenode *temp = malloc(sizeof(struct node));
+    temp->prev = NULL;
+    temp->next = NULL;
+    temp->data = d;
+    return temp;
+}
+
+Queue *InitializeQueue()
+{
+    Queue *temp = malloc(sizeof(Queue));
+    temp->size = 0;
+    temp->front = NULL;
+    temp->back = NULL;
+    return temp;
+}
+
+int Size(Queue *temp) // RETURNS THE SIZE OF THE LIST
+{
+    return (temp->size);
+}
+
+int Front(Queue *temp) // RETURNS THE FRONT ELEMENT OF THE LIST
+{
+    return (temp->front->data.val);
+}
+
+int Back(Queue *temp) // RETURNS THE BACK ELEMENT OF THE LIST
+{
+    return (temp->back->data.val);
+}
+
+int isEmpty(Queue *temp)  // CHECKS IF LIST IS EMPTY OR NOT
+{
+    if (temp->size == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+void enqueue(Queue *temp, info d) // ADDS ELEMENT AT THE END OF THE LIST ~ push.back()
+{
+    queuenode *node = InitializeNode(d);
+    if (isEmpty(temp))
+    {
+        temp->front = node;
+        temp->back = node;
+    }
+    else
+    {
+        temp->back->next = node;
+        node->prev = temp->back;
+        temp->back = node;
+    }
+    temp->size += 1;
+}
+
+void enqueueFront(Queue *temp, info d)  // ADDS ELEMENT AT THE FRONT OF THE LIST ~ push.front()
+{
+    queuenode *node = InitializeNode(d);
+    if (isEmpty(temp))
+    {
+        temp->front = node;
+        temp->back = node;
+    }
+    else
+    {
+        temp->front->prev = node;
+        node->next = temp->front;
+        temp->front = node;
+    }
+    temp->size += 1;
+}
+
+info dequeue(Queue *temp) // DELETES ELEMENT AT THE FRONT OF THE LIST ~ pop.front()
+{
+    queuenode *toremove, *newhead;
+    toremove = temp->front;
+    newhead = temp->front->next;
+    if (newhead == NULL)
+    {
+        temp->back = NULL;
+    }
+    temp->front = newhead;
+    info deleted = toremove->data;
+    free(toremove);
+    toremove = NULL;
+    temp->size -= 1;
+    return deleted;
+}
+
+info dequeueBack(Queue *temp) // DELETES ELEMENT AT THE END OF THE LIST ~ pop.back()
+{
+    queuenode *toremove, *newback;
+    toremove = temp->back;
+    newback = temp->back->prev;
+    if (newback == NULL)
+    {
+        temp->front = NULL;
+    }
+    temp->back = newback;
+    info deleted = toremove->data;
+    free(toremove);
+    toremove = NULL;
+    temp->size -= 1;
+    return deleted;
+}
+
+void Print(Queue *q) // HELPER FUNCTION USED FOR DEBUGGING AND CHECKING OUTPUT.
+{
+    Queue *temp = InitializeQueue();
+    while (!isEmpty(q))
+    {
+        info x = dequeue(q);
+        printf("%d ", x.val);
+        enqueue(temp, x);
+    }
+    printf("\n");
+    while (!isEmpty(temp))
+    {
+        info y = dequeue(temp);
+        enqueue(q, y);
+    }
+    free(temp);
+}
+
+/* ------------- DEQUE IMPLEMENTATION ENDS ------------------ */
+
+/* ------------- SOLVER FUNCTION FOR ANSWER ----------------- */
+
+void solve(int arr[], int n, int k)
+{
+    Queue *list = InitializeQueue();
+    int i;
+    for (i = 0; i < k; ++i)
+    {
+        info temp;
+        temp.val = i;
+        temp.val = i;
+        while ((!isEmpty(list)) && arr[i] <= arr[Back(list)])
+        {
+            dequeueBack(list);
+        }
+        enqueue(list, temp);
+    }
+    for (; i < n; ++i)
+    {
+        info temp2;
+        temp2.val = i;
+        printf("%d ", arr[Front(list)]);
+        while (!isEmpty(list) && Front(list) <= i - k)
+            dequeue(list);
+        while (!isEmpty(list) && arr[i] <= arr[Back(list)])
+            dequeueBack(list);
+        enqueue(list, temp2);
+    }
+    printf("%d ", arr[Front(list)]);
+    printf("\n");
+}
+
+/* --------------------------------------------------------------*/
+
+/* ----------- MAIN FUNCTION  ------------ */
+
+int main()
+{
+    int n, m;
+    scanf("%d %d", &n, &m);
+    int A[n];
+    for (int i = 0; i < n; i++)
+    {
+        scanf("%d", &A[i]);
+    }
+    solve(A, n, m);
+    return 0;
+}
+
+/* ----------------------------------------*/
